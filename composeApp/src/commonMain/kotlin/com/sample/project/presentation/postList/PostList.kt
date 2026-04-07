@@ -3,6 +3,7 @@ package com.sample.project.presentation.postList
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
@@ -37,7 +38,9 @@ fun PostListScreen(
                 ) { index ->
                     Text(
                         text = state.posts[index].title,
-                        modifier = Modifier.clickable {
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(16.dp).clickable {
                             onEvent(PostListEvent.OnPostClick(state.posts[index]))
                         }
                     )

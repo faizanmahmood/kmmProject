@@ -14,10 +14,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation3.runtime.NavEntry
@@ -25,12 +21,8 @@ import androidx.navigation3.ui.NavDisplay
 import com.sample.project.core.PostDetail
 import com.sample.project.core.PostList
 import com.sample.project.core.rememberAppNavBackStack
-import com.sample.project.presentation.postDetail.PostDetailScreen
-import com.sample.project.presentation.postDetail.PostDetailViewModel
-import com.sample.project.presentation.postList.PostListEvent
-import com.sample.project.presentation.postList.PostListScreen
-import com.sample.project.presentation.postList.PostListViewModel
-import org.koin.compose.getKoin
+import com.sample.project.presentation.postDetail.PostDetailRoute
+import com.sample.project.presentation.postList.PostListRoute
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -63,36 +55,12 @@ fun SampleApplication() {
 
             when (key) {
                 is PostList -> NavEntry(key) {
-
-                    val viewModel: PostListViewModel = getKoin().get()
-
-                    val state by viewModel.uiState.collectAsState()
-
-                    LaunchedEffect(Unit) {
-                        viewModel.events.collect { event ->
-                            if (event is PostListEvent.OnPostClick){
-                                backStack.add(PostDetail(id = event.post.id))
-                            }
-                        }
-                    }
-
-                    PostListScreen(
-                        state = state
-                    ) { event ->
-                        viewModel.onEvent(event)
-                    }
+                    PostListRoute(backStack)
                 }
 
                 is PostDetail -> NavEntry(key) {
 
-                    val viewModel: PostDetailViewModel = getKoin().get()
-
-                    val state by viewModel.uiState.collectAsState()
-
-
-                    PostDetailScreen(postId = key.id, state) { event ->
-                        viewModel.onEvent(event)
-                    }
+                    PostDetailRoute(key.id)
                 }
 
                 else -> {
