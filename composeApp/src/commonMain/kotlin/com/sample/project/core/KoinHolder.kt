@@ -10,5 +10,9 @@ object KoinHolder {
         if (koinApp != null) return
 
         initKoin()
+
+
+
+        
     }
 }
