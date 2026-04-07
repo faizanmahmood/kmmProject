@@ -1,6 +1,7 @@
 package com.sample.project.presentation.postList
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.sample.project.core.ApiResult
 import com.sample.project.data.repository.postList.PostListRepository
 import com.sample.project.domain.post.toPostData
@@ -17,15 +18,14 @@ import kotlinx.coroutines.launch
 
 class PostListViewModel(
     private val repository: PostListRepository
-): ViewModel() {
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(PostListUiStates(isLoading = false))
     val uiState: StateFlow<PostListUiStates> = _uiState
 
     private val _events = Channel<PostListEvent>()
-    val events =_events.receiveAsFlow()
+    val events = _events.receiveAsFlow()
 
-    private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     fun onEvent(event: PostListEvent) {
         when (event) {
@@ -33,8 +33,9 @@ class PostListViewModel(
                 loadPosts()
 
             }
+
             is PostListEvent.OnPostClick -> {
-                coroutineScope.launch {
+                viewModelScope.launch {
                     _events.send(PostListEvent.OnPostClick(event.post))
                 }
             }
@@ -42,7 +43,7 @@ class PostListViewModel(
     }
 
     private fun loadPosts() {
-        coroutineScope.launch {
+        viewModelScope.launch {
             repository.getPosts().collect { result ->
                 when (result) {
                     is ApiResult.Loading -> {

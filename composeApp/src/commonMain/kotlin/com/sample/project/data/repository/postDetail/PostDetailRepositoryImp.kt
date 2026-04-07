@@ -13,10 +13,10 @@ import kotlinx.coroutines.flow.flow
 class PostDetailRepositoryImp(val apiService: ApiService) : PostDetailRepository {
 
     override suspend fun getPostById(id: Int): Flow<ApiResult<PostListResponse>> {
-        return flow { emit(safeApiCall(Dispatchers.Default) { apiService.getPostsById(id) }) }
+        return flow { emit(safeApiCall { apiService.getPostsById(id) }) }
     }
 
     override suspend fun getPostComments(id: Int): Flow<ApiResult<List<CommentListResponse>>> {
-        return flow { emit(safeApiCall(Dispatchers.Default) { apiService.getComments(id) }) }
+        return flow { emit(safeApiCall { apiService.getComments(id) }) }
     }
 }
