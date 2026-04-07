@@ -41,6 +41,7 @@ fun PostListScreen(
                             onEvent(PostListEvent.OnPostClick(state.posts[index]))
                         }
                     )
+                    Text("Sample Text added for commiting")
                 }
             }
         }
