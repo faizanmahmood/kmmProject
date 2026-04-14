@@ -20,7 +20,7 @@ class PostListViewModel(
     private val repository: PostListRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(PostListUiStates(isLoading = false))
+    private val _uiState = MutableStateFlow(PostListUiStates(isLoading = true))
     val uiState: StateFlow<PostListUiStates> = _uiState
 
     private val _events = Channel<PostListEvent>()
