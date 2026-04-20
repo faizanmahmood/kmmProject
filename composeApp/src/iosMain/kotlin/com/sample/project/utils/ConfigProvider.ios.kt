@@ -2,22 +2,22 @@ package com.sample.project.utils
 
 actual object ConfigProvider {
     actual fun getBaseUrl(): String {
-        NativeConfig.getBaseUrl()
+        return "https://api.example.com/"
     }
 
     actual fun getApiKey(): String {
-        NativeConfig.getApiKey()
+        return "API_KEY_123"
     }
 
     actual fun getClientId(): String {
-        NativeConfig.getClientId()
+        return "CLIENT_ID_456"
     }
 
     actual fun getSecretKey(): String {
-        NativeConfig.getSecretKey()
+        return "SECRET_789"
     }
 
     actual fun getAnotherKey(): String {
-        NativeConfig.getAnotherKey()
+        return "KEY_000"
     }
 }

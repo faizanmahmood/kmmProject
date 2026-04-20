@@ -17,16 +17,21 @@ kotlin {
     }
     
     listOf(
+        iosX64(),
         iosArm64(),
         iosSimulatorArm64()
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
-            isStatic = true
         }
     }
     
     sourceSets {
+        val commonMain by getting
+        val devMain by creating {
+            dependsOn(commonMain)
+        }
+
         androidMain.dependencies {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.androidx.activity.compose)
@@ -52,7 +57,6 @@ kotlin {
 
             //Koin
             implementation(libs.koin.core)
-            implementation(libs.koin.compose)
 
             // ktor
             implementation(libs.ktor.client.core)
