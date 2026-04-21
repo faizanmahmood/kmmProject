@@ -13,14 +13,13 @@ import kotlinx.serialization.json.Json
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 
-
-fun initKoin(){
-    val appModule = module{
+fun initKoin() {
+    val appModule = module {
         single {
-            HttpClient(io.ktor.client.engine.cio.CIO) {
+            HttpClient(httpClientEngineFactory()) {
                 install(io.ktor.client.plugins.contentnegotiation.ContentNegotiation) {
                     json(
-                       Json { ignoreUnknownKeys = true }
+                        Json { ignoreUnknownKeys = true },
                     )
                 }
             }

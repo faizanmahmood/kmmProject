@@ -1,0 +1,2 @@
+headers = config_keys.h
+package = com.sample.nativeconfig.interop

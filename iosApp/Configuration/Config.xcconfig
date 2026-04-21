@@ -1,4 +1,10 @@
+// Your Apple Developer Team ID (10 characters). Required to run on a physical device with automatic signing.
+// Find it: Xcode → Signing & Capabilities → Team, or developer.apple.com → Membership.
+// Example: TEAM_ID=AB12CD34EF
 TEAM_ID=
+
+// Simulator: ad-hoc identity avoids codesign failures when TEAM_ID is not set yet.
+CODE_SIGN_IDENTITY[sdk=iphonesimulator*] = -
 
 PRODUCT_NAME=SampleProject
 PRODUCT_BUNDLE_IDENTIFIER=com.sample.project.SampleProject$(TEAM_ID)

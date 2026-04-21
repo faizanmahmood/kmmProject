@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.sample.project.utils.ConfigProvider
+import com.sample.nativeconfig.NativeConfigKeys
 
 @Composable
 fun PostListScreen(
@@ -68,22 +68,19 @@ fun PostListScreen(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    Text("Base Url "+ConfigProvider.getBaseUrl(), fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                    Text("Base Url " + NativeConfigKeys.getBaseUrl(), fontSize = 20.sp, fontWeight = FontWeight.Bold)
 
                     Spacer(modifier = Modifier.height(16.dp))
-                    Text("Client Id "+ConfigProvider.getClientId(), fontSize = 20.sp, fontWeight = FontWeight.Bold)
-
-
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Text("API key "+ConfigProvider.getApiKey(), fontSize = 20.sp, fontWeight = FontWeight.Bold)
-
+                    Text("Client Id " + NativeConfigKeys.getClientId(), fontSize = 20.sp, fontWeight = FontWeight.Bold)
 
                     Spacer(modifier = Modifier.height(16.dp))
-                    Text("Secret Key "+ConfigProvider.getSecretKey(), fontSize = 20.sp, fontWeight = FontWeight.Bold)
-
+                    Text("API key " + NativeConfigKeys.getApiKey(), fontSize = 20.sp, fontWeight = FontWeight.Bold)
 
                     Spacer(modifier = Modifier.height(16.dp))
-                    Text("An other key"+ConfigProvider.getAnotherKey(), fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                    Text("Secret Key " + NativeConfigKeys.getSecretKey(), fontSize = 20.sp, fontWeight = FontWeight.Bold)
+
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text("An other key " + NativeConfigKeys.getAnotherKey(), fontSize = 20.sp, fontWeight = FontWeight.Bold)
 
                 }
             }

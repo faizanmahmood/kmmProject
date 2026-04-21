@@ -1,5 +1,7 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.Framework
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -8,6 +10,8 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlin.serialization)
 }
+
+evaluationDependsOn(":nativeConfig")
 
 kotlin {
     androidTarget {
@@ -25,19 +29,42 @@ kotlin {
             baseName = "ComposeApp"
         }
     }
-    
+
+    targets.withType<KotlinNativeTarget>().configureEach {
+        val konanName = konanTarget.name
+        val nc = project(":nativeConfig")
+        val staticTaskName = "buildConfigKeysStaticLib$konanName"
+        if (nc.tasks.findByName(staticTaskName) == null) return@configureEach
+        val archive =
+            nc.layout.buildDirectory.file("native-static/$konanName/libconfig_keys.a").get().asFile.absolutePath
+        binaries.withType<Framework>().configureEach {
+            linkerOpts(archive)
+            linkTaskProvider.configure {
+                dependsOn(nc.tasks.named(staticTaskName))
+            }
+        }
+    }
+
     sourceSets {
         val commonMain by getting
-        val devMain by creating {
+
+        val iosMain by creating {
             dependsOn(commonMain)
+        }
+        listOf("iosArm64Main", "iosX64Main", "iosSimulatorArm64Main").forEach { leaf ->
+            named(leaf) {
+                dependsOn(iosMain)
+            }
         }
 
         androidMain.dependencies {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.ktor.kotlin)
+            implementation(libs.ktor.client.cio)
         }
         commonMain.dependencies {
+            implementation(project(":nativeConfig"))
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
             implementation(libs.compose.material3)
@@ -58,9 +85,8 @@ kotlin {
             //Koin
             implementation(libs.koin.core)
 
-            // ktor
+            // ktor (engines are per-platform: CIO on Android, Darwin on iOS)
             implementation(libs.ktor.client.core)
-            implementation(libs.ktor.client.cio)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.ktor.serialization.kotlinx.json)
@@ -85,21 +111,6 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        externalNativeBuild {
-            cmake {
-                cppFlags += ""
-            }
-        }
-
-        ndk {
-            abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86_64")
-        }
-    }
-
-    externalNativeBuild {
-        cmake {
-            path = file("src/androidMain/cpp/CMakeLists.txt")
-        }
     }
 
     buildFeatures {
