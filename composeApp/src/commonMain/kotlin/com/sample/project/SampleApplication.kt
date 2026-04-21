@@ -1,5 +1,11 @@
 package com.sample.project
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.exclude
@@ -14,6 +20,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation3.runtime.NavEntry
@@ -43,6 +54,8 @@ fun SampleApplication() {
         },
         contentWindowInsets = WindowInsets.systemBars.exclude(WindowInsets.navigationBars),
     ) { innerPadding ->
+        var previousKey by remember { mutableStateOf<Any?>(null) }
+
         NavDisplay(
             modifier = Modifier
                 .fillMaxSize()
@@ -50,25 +63,42 @@ fun SampleApplication() {
                 .consumeWindowInsets(innerPadding),
             backStack = backStack,
             onBack = { backStack.removeLastOrNull() }
-
         ) { key ->
 
-            when (key) {
-                is PostList -> NavEntry(key) {
-                    PostListRoute(backStack)
+            NavEntry(key) {
+
+                val isNavigatingForward = remember(previousKey, key) {
+                    previousKey != null &&
+                            previousKey != key &&
+                            backStack.lastOrNull() == key
                 }
 
-                is PostDetail -> NavEntry(key) {
+                AnimatedContent(
+                    targetState = key,
+                    transitionSpec = {
+                        if (isNavigatingForward) {
+                            slideInVertically(initialOffsetY = { -it }) + fadeIn() togetherWith
+                                    slideOutVertically(targetOffsetY = { it }) + fadeOut()
+                        } else {
+                            slideInVertically(initialOffsetY = { it }) + fadeIn() togetherWith
+                                    slideOutVertically(targetOffsetY = { -it }) + fadeOut()
+                        }
+                    },
+                    label = "nav-animation"
+                ) { target ->
 
-                    PostDetailRoute(key.id)
+                    when (target) {
+                        is PostList -> PostListRoute(backStack)
+                        is PostDetail -> PostDetailRoute(target.id)
+                        else -> error("Unknown route: $target")
+                    }
                 }
 
-                else -> {
-                    error("Unknown route: $key")
+                SideEffect {
+                    previousKey = key
                 }
             }
         }
     }
-
-
 }
+

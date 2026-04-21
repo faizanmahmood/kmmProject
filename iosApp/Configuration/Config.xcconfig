@@ -1,7 +1,19 @@
+// Your Apple Developer Team ID (10 characters). Required to run on a physical device with automatic signing.
+// Find it: Xcode → Signing & Capabilities → Team, or developer.apple.com → Membership.
+// Example: TEAM_ID=AB12CD34EF
 TEAM_ID=
+
+// Simulator: ad-hoc identity avoids codesign failures when TEAM_ID is not set yet.
+CODE_SIGN_IDENTITY[sdk=iphonesimulator*] = -
 
 PRODUCT_NAME=SampleProject
 PRODUCT_BUNDLE_IDENTIFIER=com.sample.project.SampleProject$(TEAM_ID)
 
 CURRENT_PROJECT_VERSION=1
 MARKETING_VERSION=1.0
+
+// Kotlin may use short SDK folder names (iphoneos / iphonesimulator) even when Xcode’s $(SDK_NAME) includes a version suffix
+FRAMEWORK_SEARCH_PATHS = $(inherited) $(SRCROOT)/../composeApp/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME) $(SRCROOT)/../composeApp/build/xcode-frameworks/$(CONFIGURATION)/iphoneos $(SRCROOT)/../composeApp/build/xcode-frameworks/$(CONFIGURATION)/iphonesimulator
+SWIFT_FRAMEWORK_SEARCH_PATHS = $(inherited) $(SRCROOT)/../composeApp/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME) $(SRCROOT)/../composeApp/build/xcode-frameworks/$(CONFIGURATION)/iphoneos $(SRCROOT)/../composeApp/build/xcode-frameworks/$(CONFIGURATION)/iphonesimulator
+
+OTHER_LDFLAGS = $(inherited) -framework ComposeApp

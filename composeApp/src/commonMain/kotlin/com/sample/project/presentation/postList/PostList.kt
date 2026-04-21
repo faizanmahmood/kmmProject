@@ -2,11 +2,12 @@ package com.sample.project.presentation.postList
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -14,10 +15,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.sample.project.domain.post.PostData
+import com.sample.nativeconfig.NativeConfigKeys
 
 @Composable
 fun PostListScreen(
@@ -62,7 +62,27 @@ fun PostListScreen(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                Text(it, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                Column {
+
+                    Text(it, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Text("Base Url " + NativeConfigKeys.getBaseUrl(), fontSize = 20.sp, fontWeight = FontWeight.Bold)
+
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text("Client Id " + NativeConfigKeys.getClientId(), fontSize = 20.sp, fontWeight = FontWeight.Bold)
+
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text("API key " + NativeConfigKeys.getApiKey(), fontSize = 20.sp, fontWeight = FontWeight.Bold)
+
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text("Secret Key " + NativeConfigKeys.getSecretKey(), fontSize = 20.sp, fontWeight = FontWeight.Bold)
+
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text("An other key " + NativeConfigKeys.getAnotherKey(), fontSize = 20.sp, fontWeight = FontWeight.Bold)
+
+                }
             }
         }
     }
