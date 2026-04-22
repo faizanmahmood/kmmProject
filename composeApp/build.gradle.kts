@@ -30,7 +30,7 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.androidx.activity.compose)
-            implementation(libs.ktor.kotlin)
+            implementation(libs.koin.compose)
         }
         commonMain.dependencies {
             implementation(libs.compose.runtime)
@@ -52,17 +52,11 @@ kotlin {
 
             //Koin
             implementation(libs.koin.core)
-            implementation(libs.koin.compose)
 
-            // ktor
-            implementation(libs.ktor.client.core)
-            implementation(libs.ktor.client.cio)
-            implementation(libs.ktor.client.content.negotiation)
             implementation(libs.kotlinx.coroutines.core)
-            implementation(libs.ktor.serialization.kotlinx.json)
-        }
-        iosMain.dependencies {
-            implementation(libs.ktor.darwin)
+
+            // Network module
+            implementation(projects.network)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -73,6 +67,9 @@ kotlin {
 android {
     namespace = "com.sample.project"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
+    buildFeatures {
+        buildConfig = true
+    }
 
     defaultConfig {
         applicationId = "com.sample.project"
