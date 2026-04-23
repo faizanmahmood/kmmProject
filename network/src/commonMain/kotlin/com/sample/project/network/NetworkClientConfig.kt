@@ -9,6 +9,5 @@ data class NetworkClientConfig(
     val maxRetries: Int = 2,
     val retryDelayMillis: Long = 300L,
     val authTokenProvider: AuthTokenProvider? = null,
-    /** Prefix for the Authorization header value, e.g. `"Bearer"` → `Bearer <token>`. */
     val authorizationScheme: String = "Bearer",
 )
