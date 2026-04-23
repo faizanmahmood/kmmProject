@@ -3,16 +3,16 @@ package com.sample.project.core
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.ServerResponseException
 import io.ktor.utils.io.errors.IOException
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.TimeoutCancellationException
-import kotlinx.coroutines.withContext
 
 suspend fun <T> safeApiCall(
     apiCall: suspend () -> T
 ): ApiResult<T> {
-    return  try {
+    return try {
         val result = apiCall()
         ApiResult.Success(result)
+    } catch (e: NoConnectivityException) {
+        ApiResult.Error(e.message ?: "No internet connection")
     } catch (e: IOException) {
         ApiResult.Error("Network error: ${e.message ?: "Unknown IO error"}")
     } catch (e: TimeoutCancellationException) {

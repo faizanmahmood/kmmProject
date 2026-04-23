@@ -5,25 +5,24 @@ import com.sample.project.data.repository.postDetail.PostDetailRepositoryImp
 import com.sample.project.data.repository.postList.PostListRepository
 import com.sample.project.data.repository.postList.PostListRepositoryImp
 import com.sample.project.network.ApiService
+import com.sample.project.network.AuthTokenProvider
+import com.sample.project.network.NetworkClientConfig
+import com.sample.project.network.NoOpAuthTokenProvider
+import com.sample.project.network.createNetworkHttpClient
 import com.sample.project.presentation.postDetail.PostDetailViewModel
 import com.sample.project.presentation.postList.PostListViewModel
-import io.ktor.client.HttpClient
-import io.ktor.serialization.kotlinx.json.json
-import kotlinx.serialization.json.Json
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 
 
-fun initKoin(){
-    val appModule = module{
+fun initKoin(networkClientConfig: NetworkClientConfig = NetworkClientConfig()) {
+    val appModule = module {
+        single<AuthTokenProvider> { NoOpAuthTokenProvider }
         single {
-            HttpClient(io.ktor.client.engine.cio.CIO) {
-                install(io.ktor.client.plugins.contentnegotiation.ContentNegotiation) {
-                    json(
-                       Json { ignoreUnknownKeys = true }
-                    )
-                }
-            }
+            val mergedConfig = networkClientConfig.copy(
+                authTokenProvider = networkClientConfig.authTokenProvider ?: get<AuthTokenProvider>()
+            )
+            createNetworkHttpClient(mergedConfig)
         }
 
         factory { PostListViewModel(get()) }
